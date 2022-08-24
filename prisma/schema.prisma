@@ -18,6 +18,7 @@ model User {
   updatedAt  DateTime     @updatedAt
   Session    Session[]
   Enrollment Enrollment[]
+  Ticket     Ticket?
 }
 
 model Session {
@@ -38,6 +39,7 @@ model Event {
   endsAt             DateTime
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+  Ticket             Ticket[]
 }
 
 model Enrollment {
@@ -66,4 +68,24 @@ model Address {
   Enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+}
+
+enum modality {
+  presencial
+  online
+}
+
+model Ticket {
+  id            Int      @id @default(autoincrement())
+  modality      modality
+  accommodation Boolean
+  paid          Boolean
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId        Int      @unique
+  eventId       Int
+  User          User     @relation(fields: [userId], references: [id])
+  Event         Event    @relation(fields: [eventId], references: [id])
+
+  @@map("tickets")
 }
