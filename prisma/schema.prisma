@@ -31,15 +31,16 @@ model Session {
 }
 
 model Event {
-  id                 Int      @id @default(autoincrement())
-  title              String   @db.VarChar(255)
-  backgroundImageUrl String   @db.VarChar(255)
-  logoImageUrl       String   @db.VarChar(255)
+  id                 Int        @id @default(autoincrement())
+  title              String     @db.VarChar(255)
+  backgroundImageUrl String     @db.VarChar(255)
+  logoImageUrl       String     @db.VarChar(255)
   startsAt           DateTime
   endsAt             DateTime
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
   Ticket             Ticket[]
+  modalities         Modality[]
 }
 
 model Enrollment {
@@ -70,22 +71,40 @@ model Address {
   updatedAt     DateTime   @updatedAt
 }
 
-enum modality {
-  presencial
-  online
+model Modality {
+  id      Int      @id @default(autoincrement())
+  name    String
+  price   Int
+  Event   Event    @relation(fields: [eventId], references: [id])
+  eventId Int
+  Ticket  Ticket[]
+
+  @@unique([name, eventId])
+  @@map("modalities")
+}
+
+model Accommodation {
+  id     Int      @id @default(autoincrement())
+  name   String
+  price  Int
+  Ticket Ticket[]
+
+  @@map("accommodations")
 }
 
 model Ticket {
-  id            Int      @id @default(autoincrement())
-  modality      modality
-  accommodation Boolean
-  paid          Boolean
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  userId        Int      @unique
-  eventId       Int
-  User          User     @relation(fields: [userId], references: [id])
-  Event         Event    @relation(fields: [eventId], references: [id])
+  id              Int            @id @default(autoincrement())
+  userId          Int            @unique
+  eventId         Int
+  paid            Boolean
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  modalityId      Int
+  accommodationId Int
+  accommodation   Accommodation? @relation(fields: [accommodationId], references: [id])
+  User            User           @relation(fields: [userId], references: [id])
+  Event           Event          @relation(fields: [eventId], references: [id])
+  modality        Modality       @relation(fields: [modalityId], references: [id])
 
   @@map("tickets")
 }

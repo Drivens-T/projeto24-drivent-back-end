@@ -3,7 +3,13 @@ import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
 const prisma = new PrismaClient();
 
-import { createAddress, createEnrollment, createUser } from './../src/interfaces/createDataInterfaces';
+import {
+  CreateAccommodations,
+  CreateAddress,
+  CreateEnrollment,
+  CreateModality,
+  CreateUser,
+} from './../src/interfaces/createDataInterfaces';
 
 async function main() {
   let event = await prisma.event.findFirst();
@@ -21,17 +27,35 @@ async function main() {
 
   console.log({ event });
 
-  const user: createUser = {
+  const modalities: CreateModality[] = [
+    { name: 'Presencial', price: 250, eventId: 1 },
+    { name: 'Online', price: 100, eventId: 1 },
+  ];
+
+  const createdModalities = await prisma.modality.createMany({ data: modalities });
+
+  console.log({ createdModalities });
+
+  const accommodations: CreateAccommodations[] = [
+    { name: 'Sem hotel', price: 0 },
+    { name: 'Com hotel', price: 150 },
+  ];
+
+  const createdAccommodations = await prisma.accommodation.createMany({ data: accommodations });
+
+  console.log({ createdAccommodations });
+
+  const user: CreateUser = {
     email: 'user@test.com',
     password: await bcrypt.hash('user1234', 10),
   };
-  const userEnrollment: createEnrollment = {
+  const userEnrollment: CreateEnrollment = {
     birthday: new Date('1990, 01, 01'),
     cpf: '111111111111',
     name: 'John Doe',
     phone: '+55 99 99999-9999',
   };
-  const userAddress: createAddress = {
+  const userAddress: CreateAddress = {
     cep: '11111-111',
     street: 'Random Street',
     city: 'Random city',
