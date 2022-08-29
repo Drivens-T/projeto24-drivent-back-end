@@ -96,7 +96,7 @@ model Ticket {
   id              Int            @id @default(autoincrement())
   userId          Int            @unique
   eventId         Int
-  paid            Boolean
+  paid            Boolean        @default(false)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   modalityId      Int

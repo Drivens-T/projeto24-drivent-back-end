@@ -1,19 +1,24 @@
+import { AuthenticatedRequest } from '@/middlewares/authentication-middleware';
 import eventsService from '@/services/events-service';
 import ticketsService from '@/services/tickets-service/index';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import httpStatus from 'http-status';
 
-export async function getTicketInfo(_req: Request, res: Response) {
-  const event = await eventsService.getFirstEvent();
+export async function getTicketInfo(_req: AuthenticatedRequest, res: Response) {
+  // const userId: number = res.locals.userId;
+  const { userId } = _req;
+
+  const event = await ticketsService.getTicketInfo(userId);
 
   return res.status(httpStatus.OK).send(event);
 }
 
-export async function bookTicket(_req: Request, res: Response) {
-  const userId: number = res.locals.userId;
+export async function bookTicket(_req: AuthenticatedRequest, res: Response) {
+  const { userId } = _req;
 
   const event = await eventsService.getFirstEvent();
-  const modalities = await ticketsService.bookOrUpdateTicket(userId, event.id, _req.body);
 
-  return res.status(httpStatus.OK).send(modalities);
+  const ticket = await ticketsService.bookOrUpdateTicket(userId, event.id, _req.body);
+
+  return res.status(httpStatus.OK).send(ticket);
 }
