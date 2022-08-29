@@ -19,6 +19,11 @@ async function bookOrUpdateTicket(userId: number, eventId: number, data: CreateT
 
   if (modality.name === 'Online' && data.accommodationId)
     throw invalidDataError(["You can't book accommodations to online modality"]);
+  if (modality.name === 'Online') {
+    data.accommodationId = null;
+  }
+  if (modality.name !== 'Online' && !data.accommodationId)
+    throw invalidDataError(['When booking a presential modality ticket, you need to provide a type of accommodation']);
 
   const newData = { ...data, userId, eventId };
   const ticket = await ticketRepository.createOrUpdate(newData);

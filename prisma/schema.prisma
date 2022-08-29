@@ -100,7 +100,7 @@ model Ticket {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   modalityId      Int
-  accommodationId Int
+  accommodationId Int?
   accommodation   Accommodation? @relation(fields: [accommodationId], references: [id])
   User            User           @relation(fields: [userId], references: [id])
   Event           Event          @relation(fields: [eventId], references: [id])
