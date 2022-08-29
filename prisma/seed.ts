@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
 const prisma = new PrismaClient();
 
-import { Accommodation, Address, Enrollment, Modality, Ticket, User } from '@prisma/client';
+import { Accommodation, Address, Enrollment, Modality, User } from '@prisma/client';
 
 type CreateUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
 type CreateEnrollment = Omit<Enrollment, 'id' | 'createdAt' | 'updatedAt' | 'userId'>;
