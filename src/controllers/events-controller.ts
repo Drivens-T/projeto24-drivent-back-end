@@ -7,3 +7,10 @@ export async function getDefaultEvent(_req: Request, res: Response) {
 
   return res.status(httpStatus.OK).send(event);
 }
+
+export async function getEventModalities(_req: Request, res: Response) {
+  const event = await eventsService.getFirstEvent();
+  const modalities = await eventsService.getEventModalities(event.id);
+
+  return res.status(httpStatus.OK).send(modalities);
+}

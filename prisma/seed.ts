@@ -38,7 +38,7 @@ async function main() {
 
   const accommodations: CreateAccommodations[] = [
     { name: 'Sem hotel', price: 0 },
-    { name: 'Com hotel', price: 150 },
+    { name: 'Com hotel', price: 350 },
   ];
 
   const createdAccommodations = await prisma.accommodation.createMany({ data: accommodations });

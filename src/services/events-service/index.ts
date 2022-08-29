@@ -24,9 +24,16 @@ async function isCurrentEventActive(): Promise<boolean> {
   return now.isAfter(eventStartsAt) && now.isBefore(eventEndsAt);
 }
 
+async function getEventModalities(eventId: number) {
+  const modalities = await eventRepository.findModalitiesByEventId(eventId);
+
+  return modalities;
+}
+
 const eventsService = {
   getFirstEvent,
   isCurrentEventActive,
+  getEventModalities,
 };
 
 export default eventsService;

@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { unauthorizedError } from '@/errors';
 import { prisma } from '@/config';
+import userRepository from '@/repositories/user-repository/index';
 
 export async function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.header('Authorization');
@@ -28,6 +29,18 @@ export async function authenticateToken(req: AuthenticatedRequest, res: Response
   } catch (err) {
     return generateUnauthorizedResponse(res);
   }
+}
+
+export async function verifyUser(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { userId } = req;
+
+  const user = await userRepository.findById(userId);
+
+  if (!user) throw unauthorizedError();
+
+  res.locals.user = user;
+
+  return next();
 }
 
 function generateUnauthorizedResponse(res: Response) {
