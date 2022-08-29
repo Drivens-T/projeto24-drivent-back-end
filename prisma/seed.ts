@@ -3,13 +3,13 @@ import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
 const prisma = new PrismaClient();
 
-import {
-  CreateAccommodations,
-  CreateAddress,
-  CreateEnrollment,
-  CreateModality,
-  CreateUser,
-} from './../src/interfaces/createDataInterfaces';
+import { Accommodation, Address, Enrollment, Modality, User } from '@prisma/client';
+
+type CreateUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+type CreateEnrollment = Omit<Enrollment, 'id' | 'createdAt' | 'updatedAt' | 'userId'>;
+type CreateAddress = Omit<Address, 'id' | 'createdAt' | 'updatedAt' | 'enrollmentId'>;
+type CreateModality = Omit<Modality, 'id'>;
+type CreateAccommodations = Omit<Accommodation, 'id'>;
 
 async function main() {
   let event = await prisma.event.findFirst();
