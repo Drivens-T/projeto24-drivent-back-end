@@ -3,3 +3,4 @@ export * from './authentication-router';
 export * from './events-router';
 export * from './enrollments-router';
 export * from './locations-router';
+export * from './activities-router';
