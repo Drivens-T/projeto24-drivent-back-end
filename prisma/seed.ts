@@ -1,15 +1,14 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Accommodation, Address, Enrollment, Modality, User, Location } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
 const prisma = new PrismaClient();
-
-import { Accommodation, Address, Enrollment, Modality, User } from '@prisma/client';
 
 type CreateUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
 type CreateEnrollment = Omit<Enrollment, 'id' | 'createdAt' | 'updatedAt' | 'userId'>;
 type CreateAddress = Omit<Address, 'id' | 'createdAt' | 'updatedAt' | 'enrollmentId'>;
 type CreateModality = Omit<Modality, 'id'>;
 type CreateAccommodations = Omit<Accommodation, 'id'>;
+type CreateLocation = Omit<Location, 'id'>;
 
 async function main() {
   let event = await prisma.event.findFirst();
@@ -69,6 +68,16 @@ async function main() {
     data: { ...user, Enrollment: { create: { ...userEnrollment, Address: { create: { ...userAddress } } } } },
   });
   console.log({ createdUser });
+
+  const locations: CreateLocation[] = [
+    { name: 'Auditório Principal' },
+    { name: 'Auditório Lateral' },
+    { name: 'Sala de Workshop' },
+  ];
+
+  const createdLocations = await prisma.location.createMany({ data: locations });
+
+  console.log({ createdLocations });
 }
 
 main()
