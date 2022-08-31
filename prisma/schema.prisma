@@ -93,18 +93,77 @@ model Accommodation {
 }
 
 model Ticket {
-  id              Int            @id @default(autoincrement())
-  userId          Int            @unique
+  id              Int        @id @default(autoincrement())
+  userId          Int        @unique
   eventId         Int
-  paid            Boolean        @default(false)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  paid            Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
   modalityId      Int
   accommodationId Int?
-  accommodation   Accommodation? @relation(fields: [accommodationId], references: [id])
-  User            User           @relation(fields: [userId], references: [id])
-  Event           Event          @relation(fields: [eventId], references: [id])
-  modality        Modality       @relation(fields: [modalityId], references: [id])
+  roomId          Int?
+  activities      Activity[]
+
+  User          User           @relation(fields: [userId], references: [id])
+  Event         Event          @relation(fields: [eventId], references: [id])
+  modality      Modality       @relation(fields: [modalityId], references: [id])
+  accommodation Accommodation? @relation(fields: [accommodationId], references: [id])
+  room          Room?          @relation(fields: [roomId], references: [id])
 
   @@map("tickets")
+}
+
+model Hotel {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  imageUrl  String
+  roomTypes RoomType[]
+  rooms     Room[]
+
+  @@map("hotels")
+}
+
+model Room {
+  id         Int @id @default(autoincrement())
+  hotelId    Int
+  roomTypeId Int
+
+  roomType RoomType @relation(fields: [roomTypeId], references: [id])
+  hotel    Hotel    @relation(fields: [hotelId], references: [id])
+  ticket   Ticket[]
+
+  @@map("rooms")
+}
+
+model RoomType {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+  capacity Int
+  rooms    Room[]
+  hotels   Hotel[]
+
+  @@map("roomTypes")
+}
+
+model Activity {
+  id         Int      @id @default(autoincrement())
+  name       String
+  locationId Int
+  startTime  DateTime @db.Timestamptz()
+  endTime    DateTime @db.Timestamptz()
+  capacity   Int
+  ticket     Ticket[]
+
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@map("activities")
+}
+
+model Location {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  activity Activity[]
+
+  @@map("locations")
 }
