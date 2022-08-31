@@ -86,14 +86,14 @@ async function main() {
       locationId: 1,
       startTime: dayjs('2022-10-22 09:00').toDate(),
       endTime: dayjs('2022-10-22 10:00').toDate(),
-      capacity: 20,
+      capacity: 30,
     },
     {
       name: 'Dota 2: montando o PC ideal',
       locationId: 1,
       startTime: dayjs('2022-10-22 10:00').toDate(),
       endTime: dayjs('2022-10-22 11:00').toDate(),
-      capacity: 10,
+      capacity: 1,
     },
     {
       name: 'Palestra 1',
@@ -112,9 +112,9 @@ async function main() {
     {
       name: 'Palestra 3',
       locationId: 3,
-      startTime: dayjs('2022-10-24 10:00').toDate(),
-      endTime: dayjs('2022-10-24 11:00').toDate(),
-      capacity: 1,
+      startTime: dayjs('2022-10-24 09:00').toDate(),
+      endTime: dayjs('2022-10-24 10:00').toDate(),
+      capacity: 10,
     },
   ];
 
