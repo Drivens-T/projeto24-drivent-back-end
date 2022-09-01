@@ -1,10 +1,11 @@
 import { AuthenticatedRequest } from '@/middlewares/authentication-middleware';
 import activitiesService from '@/services/activities-service';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import httpStatus from 'http-status';
 
-export async function getActivities(_req: Request, res: Response) {
-  const activities = await activitiesService.getActivities();
+export async function getActivities(_req: AuthenticatedRequest, res: Response) {
+  const { userId } = _req;
+  const activities = await activitiesService.getActivities(userId);
 
   return res.status(httpStatus.OK).send(activities);
 }
