@@ -9,6 +9,7 @@ export type CreateTicket = Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>;
 export type CreateTicketSchema = Omit<Ticket, 'id' | 'userId' | 'eventId' | 'createdAt' | 'updatedAt'>;
 export type CreateLocation = Omit<Location, 'id'>;
 export type CreateActivity = Omit<Activity, 'id'>;
+export type CreateActivityRegister = Omit<Activity, 'name' | 'locationId' | 'startTime' | 'endTime' | 'capacity'>;
 
 // export type AppInsertData = CreateAccommodations | CreateLocation;
 // export type Table = 'accommodation' | 'location';

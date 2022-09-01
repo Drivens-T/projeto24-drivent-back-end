@@ -1,4 +1,6 @@
 import Joi from 'joi';
-import { CreateActivity } from '@/interfaces/createDataInterfaces';
+import { CreateActivityRegister } from '@/interfaces/createDataInterfaces';
 
-export const activitySchema = Joi.object<CreateActivity>({});
+export const registerActivitySchema = Joi.object<CreateActivityRegister>({
+  id: Joi.number().integer().min(1).required(),
+});

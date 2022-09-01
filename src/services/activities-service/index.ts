@@ -1,9 +1,4 @@
-/* eslint-disable no-console */
-// import { invalidDataError, notFoundError } from '@/errors';
-// import { CreateActivity } from '@/interfaces/createDataInterfaces';
-// import eventRepository from '@/repositories/event-repository/index';
-// import { Event } from '@prisma/client';
-// import { exclude } from '@/utils/prisma-utils';
+import { invalidDataError } from '@/errors';
 import activityRepository from '@/repositories/activity-repository/index';
 
 async function getActivities() {
@@ -12,8 +7,17 @@ async function getActivities() {
   return activities;
 }
 
+async function registerOnActivity(userId: number, activityId: number) {
+  const activityData = await activityRepository.getActivity(activityId);
+  if (!activityData) {
+    throw invalidDataError(['This activity does not exist']);
+  }
+  await activityRepository.registerOnActivity(userId, activityId);
+}
+
 const activitiesService = {
   getActivities,
+  registerOnActivity,
 };
 
 export default activitiesService;
