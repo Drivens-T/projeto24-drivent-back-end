@@ -10,6 +10,7 @@ async function findAll() {
       capacity: true,
       startTime: true,
       endTime: true,
+      ticket: true,
     },
     orderBy: { startTime: 'asc' },
   });
