@@ -11,7 +11,17 @@ async function findAll() {
       capacity: true,
       startTime: true,
       endTime: true,
-      ticket: true,
+      ticket: {
+        select: {
+          User: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
+        },
+      },
+      _count: { select: { ticket: true } },
     },
     orderBy: { startTime: 'asc' },
   });

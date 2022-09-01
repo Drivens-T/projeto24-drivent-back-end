@@ -1,8 +1,13 @@
 import { invalidDataError } from '@/errors';
 import activityRepository from '@/repositories/activity-repository/index';
+import { exclude } from '@/utils/prisma-utils';
 
 async function getActivities() {
-  const activities = await activityRepository.findAll();
+  const allActivities = await activityRepository.findAll();
+  const activities = allActivities.map((activity) => {
+    const capacity = activity.capacity - activity._count.ticket;
+    return exclude({ ...activity, capacity }, '_count');
+  });
 
   return activities;
 }
