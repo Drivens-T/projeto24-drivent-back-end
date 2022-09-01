@@ -1,4 +1,4 @@
-import { invalidDataError } from '@/errors';
+import { fullCapacityError, invalidDataError } from '@/errors';
 import activityRepository from '@/repositories/activity-repository/index';
 import { exclude } from '@/utils/prisma-utils';
 
@@ -17,6 +17,10 @@ async function registerOnActivity(userId: number, activityId: number) {
   const activityData = await activityRepository.getActivity(activityId);
   if (!activityData) {
     throw invalidDataError(['This activity does not exist']);
+  }
+  const capacity = activityData.capacity - activityData._count.ticket;
+  if (capacity <= 0) {
+    throw fullCapacityError();
   }
   await activityRepository.registerOnActivity(userId, activityId);
 }

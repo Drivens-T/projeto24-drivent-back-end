@@ -30,6 +30,7 @@ async function findAll() {
 async function getActivity(id: number) {
   return prisma.activity.findFirst({
     where: { id },
+    include: { _count: { select: { ticket: true } } },
   });
 }
 
