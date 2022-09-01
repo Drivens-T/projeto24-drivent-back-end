@@ -2,6 +2,15 @@ import { prisma } from '@/config/database';
 
 async function findAll() {
   return prisma.activity.findMany({
+    select: {
+      name: true,
+      location: {
+        select: { name: true },
+      },
+      capacity: true,
+      startTime: true,
+      endTime: true,
+    },
     orderBy: { startTime: 'asc' },
   });
 }
