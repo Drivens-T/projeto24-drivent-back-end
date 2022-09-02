@@ -32,12 +32,12 @@ async function registerOnActivity(userId: number, activityId: number) {
 
 function getDays(allActivities: any) {
   const aux = [];
-  let lastDate;
+  const hash: any = {};
   for (let i = 0; i < allActivities.length; i++) {
-    const activity = allActivities[i];
-    const date = formatDate(activity.startTime);
-    if (date === lastDate) continue;
-    lastDate = date;
+    const { startTime } = allActivities[i];
+    const date = formatDate(startTime);
+    if (hash[date]) continue;
+    hash[date] = true;
     aux.push(date);
   }
   return aux;
