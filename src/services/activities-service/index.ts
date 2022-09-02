@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { fullCapacityError, invalidDataError } from '@/errors';
 import activityRepository from '@/repositories/activity-repository/index';
-import { formatDate } from '@/utils/formats-utils';
+import { formatDate, formatDateTimestamp } from '@/utils/formats-utils';
 import { exclude } from '@/utils/prisma-utils';
 
 async function getActivities(userId: number) {
@@ -9,7 +9,9 @@ async function getActivities(userId: number) {
   const activities = allActivities.map((activity) => {
     const capacity = activity.capacity - activity._count.ticket;
     const isRegister = activity.ticket.some((ticket) => ticket.User.id === userId);
-    return exclude({ ...activity, capacity, isRegister }, '_count', 'ticket');
+    const startTime = formatDateTimestamp(activity.startTime);
+    const endTime = formatDateTimestamp(activity.endTime);
+    return exclude({ ...activity, startTime, endTime, capacity, isRegister }, '_count', 'ticket');
   });
   const activitiesDate = getDays(allActivities);
 
@@ -33,6 +35,7 @@ function getDays(allActivities: any) {
   let lastDate;
   for (let i = 0; i < allActivities.length; i++) {
     const activity = allActivities[i];
+    formatDateTimestamp(activity.startTime);
     const date = formatDate(activity.startTime);
     if (date === lastDate) continue;
     lastDate = date;

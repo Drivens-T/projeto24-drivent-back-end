@@ -10,3 +10,7 @@ export function formatDate(startDate: any) {
   const splitDate = date.split(',');
   return `${splitDate[0].split('-')[0]},${splitDate[1]}`;
 }
+
+export function formatDateTimestamp(date: any) {
+  return dayjs(date).format('DD/MM/YYYY HH:mm');
+}
