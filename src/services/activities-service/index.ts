@@ -35,7 +35,6 @@ function getDays(allActivities: any) {
   let lastDate;
   for (let i = 0; i < allActivities.length; i++) {
     const activity = allActivities[i];
-    formatDateTimestamp(activity.startTime);
     const date = formatDate(activity.startTime);
     if (date === lastDate) continue;
     lastDate = date;
