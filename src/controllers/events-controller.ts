@@ -4,7 +4,9 @@ import httpStatus from 'http-status';
 import { createClient } from 'redis';
 import { connectRedis } from '@/config';
 
-const redis = createClient({});
+const redis = createClient({
+  url: process.env.REDIS_URL,
+});
 connectRedis(redis);
 
 export async function getDefaultEvent(_req: Request, res: Response) {
