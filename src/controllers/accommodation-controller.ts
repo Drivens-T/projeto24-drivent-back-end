@@ -1,4 +1,4 @@
-import accommodationsService from '@/services/accomodation-service/index';
+import { accommodationsService } from '@/services/index';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 

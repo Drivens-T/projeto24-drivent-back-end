@@ -1,6 +1,7 @@
-import { invalidDataError, notFoundError } from '@/errors';
-import { CreateTicket } from '@/interfaces/createDataInterfaces';
+import { conflictError, invalidDataError, notFoundError } from '@/errors';
+import { BookRoomRequest, BookTicket } from '@/interfaces/createDataInterfaces';
 import eventRepository from '@/repositories/event-repository/index';
+import hotelsRepository from '@/repositories/hotel-repository/index';
 import ticketRepository from '@/repositories/ticket-repository/index';
 import { exclude } from '@/utils/prisma-utils';
 import { Event } from '@prisma/client';
@@ -14,7 +15,7 @@ async function getTicketInfo(userId: number) {
 
 export type GetFirstEventResult = Omit<Event, 'createdAt' | 'updatedAt'>;
 
-async function bookOrUpdateTicket(userId: number, eventId: number, data: CreateTicket) {
+async function bookOrUpdateTicket(userId: number, eventId: number, data: BookTicket) {
   const modality = await eventRepository.findEventModalityById(data.modalityId);
 
   if (modality.name === 'Online' && data.accommodationId)
@@ -31,9 +32,25 @@ async function bookOrUpdateTicket(userId: number, eventId: number, data: CreateT
   return ticket;
 }
 
+async function bookHotelRoom(userId: number, eventId: number, data: BookRoomRequest) {
+  const existingTicket = await ticketRepository.findTicketByUserId(userId);
+  const { roomId } = data;
+
+  const room = await hotelsRepository.findRoomInfo(roomId);
+
+  if (room.roomType.capacity === room._count.ticket) throw conflictError('This room is full');
+
+  const ticketToUpdate = { ...existingTicket, roomId };
+
+  const updatedTicket = await ticketRepository.createOrUpdate(ticketToUpdate);
+
+  return updatedTicket;
+}
+
 const ticketsService = {
   getTicketInfo,
   bookOrUpdateTicket,
+  bookHotelRoom,
 };
 
 export default ticketsService;
