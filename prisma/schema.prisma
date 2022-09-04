@@ -114,17 +114,18 @@ model Ticket {
 }
 
 model Hotel {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique
-  imageUrl  String
-  roomTypes RoomType[]
-  rooms     Room[]
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  imageUrl String
+
+  rooms Room[]
 
   @@map("hotels")
 }
 
 model Room {
   id         Int @id @default(autoincrement())
+  roomNumber Int
   hotelId    Int
   roomTypeId Int
 
@@ -136,11 +137,10 @@ model Room {
 }
 
 model RoomType {
-  id       Int     @id @default(autoincrement())
-  name     String  @unique
+  id       Int    @id @default(autoincrement())
+  name     String @unique
   capacity Int
   rooms    Room[]
-  hotels   Hotel[]
 
   @@map("roomTypes")
 }
