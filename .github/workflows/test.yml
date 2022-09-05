@@ -10,8 +10,8 @@ env:
   JWT_SECRET: top_secret
   DATABASE_URL: postgres://postgres:top_secret@drivent-postgres-test:5432/drivent_test?schema=public
   REDIS_HOST: redis-test
-  REDIS_PORT: 6379
-  REDIS_URL: redis://redis-test:6379
+  REDIS_PORT: 6378
+  REDIS_URL: redis://redis-test:6378
 jobs:
   test:
     runs-on: ubuntu-20.04
