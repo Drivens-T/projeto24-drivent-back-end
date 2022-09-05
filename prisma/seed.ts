@@ -1,6 +1,7 @@
 import { PrismaClient, Accommodation, Address, Enrollment, Modality, User, Location, Activity } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
+import { createClient } from 'redis';
 const prisma = new PrismaClient();
 
 type CreateUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
@@ -11,9 +12,24 @@ type CreateAccommodations = Omit<Accommodation, 'id'>;
 type CreateLocation = Omit<Location, 'id'>;
 type CreateActivity = Omit<Activity, 'id'>;
 
+async function connectRedis(redis: any) {
+  await redis.connect();
+}
+const redis = createClient({
+  url: process.env.REDIS_URL,
+});
+connectRedis(redis);
+
 async function main() {
-  let event = await prisma.event.findFirst();
-  if (!event) {
+  const cacheKey = 'event';
+  const cachedEvent = await redis.get(cacheKey);
+  if (cachedEvent) {
+    const event = await prisma.event.create({
+      data: JSON.parse(cachedEvent),
+    });
+    console.log({ cachedEvent: event });
+  } else {
+    let event = await prisma.event.findFirst();
     event = await prisma.event.create({
       data: {
         title: 'Driven.t',
@@ -23,9 +39,9 @@ async function main() {
         endsAt: dayjs().add(21, 'days').toDate(),
       },
     });
+    redis.set(cacheKey, JSON.stringify(event));
+    console.log({ event });
   }
-
-  console.log({ event });
 
   const modalities: CreateModality[] = [
     { name: 'Presencial', price: 250, eventId: 1 },
