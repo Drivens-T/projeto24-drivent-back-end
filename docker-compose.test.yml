@@ -12,12 +12,6 @@ services:
     volumes:
       - ~/data/drivent/postgres-test:/var/lib/postgresql/data
     command: postgres -p ${POSTGRES_PORT}
-  redis-test:
-    image: redis
-    restart: always
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
-    command: redis-server
   drivent-test:
     build:
       context: .
@@ -42,6 +36,3 @@ services:
       POSTGRES_PORT: ${POSTGRES_PORT}
       DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_URL: ${REDIS_URL}
