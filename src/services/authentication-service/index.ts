@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
 import sessionRepository from '@/repositories/session-repository';
 import userRepository from '@/repositories/user-repository';
 import userService from '@/services/users-service';
