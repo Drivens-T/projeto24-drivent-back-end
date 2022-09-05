@@ -4,6 +4,10 @@ import { signInSchema } from '@/schemas';
 import { Router } from 'express';
 import qs from 'query-string';
 import axios from 'axios';
+import bcrypt from 'bcrypt';
+import userRepository from '@/repositories/user-repository';
+import userService from '@/services/users-service';
+import authenticationService, { SignInParams } from '@/services/authentication-service';
 
 const authenticationRouter = Router();
 
@@ -16,9 +20,31 @@ authenticationRouter.post('/login', async (req, res) => {
     const user = await fetchUser(token);
     res.send(user);
   } catch (err) {
-    console.log('err', err.response.data);
+    console.log('err', err.response);
     res.sendStatus(500);
   }
+});
+
+authenticationRouter.post('/usergithub', async (req, res) => {
+  const { email, password } = req.body;
+
+  const userWithSameEmail = await userRepository.findByEmail(email);
+  if (userWithSameEmail) {
+    const result = await authenticationService.signIn({ email, password });
+
+    res.status(200).send(result);
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 12);
+  console.log(hashedPassword, email);
+
+  const usuario = await userService.createUser({ email, password });
+  res.status(201).json({
+    id: usuario.id,
+    email: usuario.email,
+  });
+
 });
 
 async function exchangeCodeForAccessToken(code: any) {
