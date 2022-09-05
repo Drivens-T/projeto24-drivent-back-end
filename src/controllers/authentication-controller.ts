@@ -9,3 +9,23 @@ export async function singInPost(req: Request, res: Response) {
 
   res.status(httpStatus.OK).send(result);
 }
+
+export async function authenticationGithub(req: Request, res: Response) {
+  try {
+    const token = await authenticationService.exchangeCodeForAccessToken(req.body.code);
+    console.log('token', token);
+
+    const user = await authenticationService.fetchUser(token);
+    res.send(user);
+  } catch (err) {
+    console.log('err', err.response);
+    res.sendStatus(500);
+  }
+}
+
+export async function loginGithub(req: Request, res: Response) {
+  const { email, password } = req.body;
+
+  const user = await authenticationService.loginGithub(email, password);
+  res.status(201).send(user);
+}
