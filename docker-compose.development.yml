@@ -15,10 +15,6 @@ services:
   redis-development:
     image: redis
     container_name: redis-development
-    environment:
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_URL: ${REDIS_URL}
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
   drivent-development:
