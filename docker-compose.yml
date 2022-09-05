@@ -28,6 +28,14 @@ services:
     volumes:
       - /usr/local/drivent-pg/data:/var/lib/postgresql/data
     command: postgres -p ${POSTGRES_PORT}
+  redis:
+    image: redis
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_URL: ${REDIS_URL}
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
   drivent-nginx:
     image: nginx
     ports:

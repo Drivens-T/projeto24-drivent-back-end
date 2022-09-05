@@ -35,7 +35,8 @@
     "dev": "NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
     "dev:windows": "cross-env NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
     "ci:build": "docker-compose -f docker-compose.test.yml build",
-    "ci:test": "docker-compose -f docker-compose.test.yml run drivent-test bash -c 'npm run test:migration:run && npm test'"
+    "ci:test": "docker-compose -f docker-compose.test.yml run drivent-test bash -c 'npm run test:migration:run && npm test'",
+    "stress": "autocannon -c 1000 -d 30 --renderStatusCodes --latency --warmup [-c 1 -d 2] localhost:4000/event"
   },
   "keywords": [
     "driven.t",
@@ -87,6 +88,7 @@
   "dependencies": {
     "@brazilian-utils/brazilian-utils": "^1.0.0-rc.12",
     "@prisma/client": "^3.14.0",
+    "autocannon": "^7.9.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dayjs": "^1.11.5",
@@ -97,6 +99,7 @@
     "http-status": "^1.5.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
+    "redis": "^4.3.0",
     "reflect-metadata": "^0.1.13"
   }
 }

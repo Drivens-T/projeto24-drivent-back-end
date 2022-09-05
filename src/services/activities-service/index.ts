@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { fullCapacityError, invalidDataError } from '@/errors';
+import { conflictError, fullCapacityError, invalidDataError } from '@/errors';
 import activityRepository from '@/repositories/activity-repository/index';
 import { formatDate, formatDateTimestamp } from '@/utils/formats-utils';
 import { exclude } from '@/utils/prisma-utils';
@@ -27,20 +27,49 @@ async function registerOnActivity(userId: number, activityId: number) {
   if (capacity <= 0) {
     throw fullCapacityError();
   }
+  if (await hasTimeConflict(activityData, userId)) {
+    throw conflictError('Time conflict');
+  }
   await activityRepository.registerOnActivity(userId, activityId);
 }
 
 function getDays(allActivities: any) {
   const aux = [];
-  let lastDate;
+  const hash: any = {};
   for (let i = 0; i < allActivities.length; i++) {
-    const activity = allActivities[i];
-    const date = formatDate(activity.startTime);
-    if (date === lastDate) continue;
-    lastDate = date;
+    const { startTime } = allActivities[i];
+    const date = formatDate(startTime);
+    if (hash[date]) continue;
+    hash[date] = true;
     aux.push(date);
   }
   return aux;
+}
+
+async function hasTimeConflict(activityData: any, userId: number) {
+  const startTime = formatDateTimestamp(activityData.startTime);
+  const endTime = formatDateTimestamp(activityData.endTime);
+  const selectedActivity = { ...activityData, startTime, endTime };
+  const allActivities = (await getActivities(userId)).activities;
+  const registerActivities = allActivities.filter(
+    (activity) =>
+      activity.isRegister === true &&
+      startTime.split(' ')[0] === activity.startTime.split(' ')[0] &&
+      selectedActivity.id !== activity.id,
+  );
+  for (let i = 0; i < registerActivities.length; i++) {
+    const registerActivityStartTime = registerActivities[i].startTime.split(' ')[1];
+    const registerActivityEndTime = registerActivities[i].endTime.split(' ')[1];
+    const activityStartTime = startTime.split(' ')[1];
+    const activityEndTime = endTime.split(' ')[1];
+    const conditions =
+      (activityStartTime < registerActivityStartTime && activityEndTime <= registerActivityStartTime) ||
+      (activityStartTime >= registerActivityEndTime && activityEndTime > registerActivityEndTime);
+    if (!conditions) {
+      return true;
+    }
+  }
+  return false;
 }
 
 const activitiesService = {
