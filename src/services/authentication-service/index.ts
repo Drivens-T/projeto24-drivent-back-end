@@ -86,11 +86,11 @@ async function loginGithub(email: string, password: string) {
     await userService.createUser({ email, password });
   }
 
-  await signIn({ email, password });
+  const result = await signIn({ email, password });
 
   const user = await userRepository.findByEmail(email);
 
-  return user;
+  return result;
 }
 
 export type SignInParams = Pick<User, 'email' | 'password'>;
