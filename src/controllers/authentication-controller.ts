@@ -26,7 +26,9 @@ export async function authenticationGithub(req: Request, res: Response) {
 export async function loginGithub(req: Request, res: Response) {
   const { email, password } = req.body;
 
-  await authenticationService.loginGithub(email, password);
-
-  res.status(201)
+  const user = await authenticationService.loginGithub(email, password);
+  res.status(201).json({
+    id: user.id,
+    email: user.email,
+  });
 }
