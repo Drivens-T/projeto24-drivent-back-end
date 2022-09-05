@@ -8,7 +8,7 @@ export function handleApplicationErrors(
   res: Response,
   _next: NextFunction,
 ) {
-  if (err.name === 'CannotEnrollBeforeStartDateError') {
+  if (err.name === 'CannotEnrollBeforeStartDateError' || err.name === 'fullCapacityError') {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
     });
@@ -28,6 +28,12 @@ export function handleApplicationErrors(
 
   if (err.name === 'NotFoundError') {
     return res.status(httpStatus.NOT_FOUND).send({
+      message: err.message,
+    });
+  }
+
+  if (err.name === 'InvalidDataError') {
+    return res.status(httpStatus.UNPROCESSABLE_ENTITY).send({
       message: err.message,
     });
   }

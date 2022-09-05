@@ -12,6 +12,11 @@ services:
     volumes:
       - drivent-postgres-data:/var/lib/postgresql/data
     command: postgres -p ${POSTGRES_PORT}
+  redis-development:
+    image: redis
+    container_name: redis-development
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
   drivent-development:
     build:
       context: .
@@ -19,6 +24,7 @@ services:
     container_name: drivent-development
     depends_on:
       - drivent-postgres-development
+      - redis-development
     logging:
       driver: 'json-file'
       options:
@@ -40,3 +46,4 @@ services:
       - 4000:4000
 volumes:
   drivent-postgres-data:
+  

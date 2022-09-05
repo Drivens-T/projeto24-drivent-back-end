@@ -9,13 +9,15 @@ loadEnv();
 
 import { handleApplicationErrors } from '@/middlewares';
 import {
-  accommodationsRouter,
-  authenticationRouter,
-  enrollmentsRouter,
-  eventsRouter,
-  hotelsRouter,
-  ticketsRouter,
   usersRouter,
+  authenticationRouter,
+  eventsRouter,
+  enrollmentsRouter,
+  locationsRouter,
+  activitiesRouter,
+  hotelsRouter,
+  accommodationsRouter,
+  ticketsRouter,
 } from '@/routers';
 
 const app = express();
@@ -29,6 +31,8 @@ app
   .use('/enrollments', enrollmentsRouter)
   .use('/accommodations', accommodationsRouter)
   .use('/ticket', ticketsRouter)
+  .use('/locations', locationsRouter)
+  .use('/activities', activitiesRouter)
   .use('/hotels', hotelsRouter)
   .use(handleApplicationErrors);
 

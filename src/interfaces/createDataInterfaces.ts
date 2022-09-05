@@ -1,4 +1,4 @@
-import { Accommodation, Address, Enrollment, Modality, Ticket, User } from '@prisma/client';
+import { Accommodation, Address, Enrollment, Modality, Ticket, User, Location, Activity } from '@prisma/client';
 
 export type CreateUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
 export type CreateEnrollment = Omit<Enrollment, 'id' | 'createdAt' | 'updatedAt' | 'userId'>;
@@ -9,3 +9,9 @@ export type BookRoomRequest = { roomId: number };
 export type BookRoom = Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>;
 export type BookTicket = Omit<BookRoom, 'roomId'>;
 export type CreateTicketSchema = Omit<Ticket, 'id' | 'userId' | 'eventId' | 'createdAt' | 'updatedAt'>;
+export type CreateLocation = Omit<Location, 'id'>;
+export type CreateActivity = Omit<Activity, 'id'>;
+export type CreateActivityRegister = Omit<Activity, 'name' | 'locationId' | 'startTime' | 'endTime' | 'capacity'>;
+
+// export type AppInsertData = CreateAccommodations | CreateLocation;
+// export type Table = 'accommodation' | 'location';
