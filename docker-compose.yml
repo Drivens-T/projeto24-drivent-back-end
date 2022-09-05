@@ -17,6 +17,7 @@ services:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
+      REDIS_URL: ${REDIS_URL}
   drivent-postgres-production:
     image: postgres:13-alpine
     environment:
@@ -30,10 +31,6 @@ services:
     command: postgres -p ${POSTGRES_PORT}
   redis:
     image: redis
-    environment:
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_URL: ${REDIS_URL}
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
   drivent-nginx:
