@@ -93,22 +93,21 @@ model Accommodation {
 }
 
 model Ticket {
-  id              Int        @id @default(autoincrement())
-  userId          Int        @unique
+  id              Int            @id @default(autoincrement())
+  userId          Int            @unique
   eventId         Int
-  paid            Boolean    @default(false)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  paid            Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   modalityId      Int
   accommodationId Int?
   roomId          Int?
   activities      Activity[]
-
-  User          User           @relation(fields: [userId], references: [id])
-  Event         Event          @relation(fields: [eventId], references: [id])
-  modality      Modality       @relation(fields: [modalityId], references: [id])
-  accommodation Accommodation? @relation(fields: [accommodationId], references: [id])
-  room          Room?          @relation(fields: [roomId], references: [id])
+  User            User           @relation(fields: [userId], references: [id])
+  Event           Event          @relation(fields: [eventId], references: [id])
+  modality        Modality       @relation(fields: [modalityId], references: [id])
+  accommodation   Accommodation? @relation(fields: [accommodationId], references: [id])
+  room            Room?          @relation(fields: [roomId], references: [id])
 
   @@map("tickets")
 }
@@ -124,13 +123,12 @@ model Hotel {
 }
 
 model Room {
-  id         Int @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   hotelId    Int
   roomTypeId Int
-
-  roomType RoomType @relation(fields: [roomTypeId], references: [id])
-  hotel    Hotel    @relation(fields: [hotelId], references: [id])
-  ticket   Ticket[]
+  roomType   RoomType @relation(fields: [roomTypeId], references: [id])
+  hotel      Hotel    @relation(fields: [hotelId], references: [id])
+  ticket     Ticket[]
 
   @@map("rooms")
 }
@@ -153,16 +151,14 @@ model Activity {
   endTime    DateTime @db.Timestamptz()
   capacity   Int
   ticket     Ticket[]
-
-  location Location @relation(fields: [locationId], references: [id])
+  location   Location @relation(fields: [locationId], references: [id])
 
   @@map("activities")
 }
 
 model Location {
-  id   Int    @id @default(autoincrement())
-  name String
-
+  id       Int        @id @default(autoincrement())
+  name     String
   activity Activity[]
 
   @@map("locations")
