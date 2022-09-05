@@ -4,15 +4,21 @@ import { formatHotelData } from '@/utils/hotels-utils';
 export async function getAllHotels() {
   const hotels = await hotelsRepository.findAll();
 
-  return formatHotelData(hotels);
+  return hotels.map(formatHotelData);
 }
 
-export async function getHotelAvailableRooms(hotelId: number) {
-  const rooms = await hotelsRepository.findAvailableRooms(hotelId);
+export async function getHotelInfo(hotelId: number) {
+  const hotel = await hotelsRepository.findById(hotelId);
 
-  return rooms;
+  return formatHotelData(hotel);
 }
 
-const hotelsService = { getAllHotels, getHotelAvailableRooms };
+export async function getBookedRoomInfo(userId: number) {
+  const room = await hotelsRepository.findBookedRoomByUserId(userId);
+
+  return room;
+}
+
+const hotelsService = { getAllHotels, getHotelInfo, getBookedRoomInfo };
 
 export default hotelsService;

@@ -8,10 +8,32 @@ function findAll() {
       imageUrl: true,
       rooms: {
         select: {
+          id: true,
           roomNumber: true,
           roomType: { select: { name: true, capacity: true } },
           _count: { select: { ticket: true } },
         },
+        orderBy: { roomNumber: 'asc' },
+      },
+    },
+  });
+}
+
+function findById(hotelId: number) {
+  return prisma.hotel.findUnique({
+    where: { id: hotelId },
+    select: {
+      id: true,
+      name: true,
+      imageUrl: true,
+      rooms: {
+        select: {
+          id: true,
+          roomNumber: true,
+          roomType: { select: { name: true, capacity: true } },
+          _count: { select: { ticket: true } },
+        },
+        orderBy: { roomNumber: 'asc' },
       },
     },
   });
@@ -28,10 +50,27 @@ function findRoomInfo(roomId: number) {
   });
 }
 
+function findBookedRoomByUserId(userId: number) {
+  return prisma.room.findFirst({
+    where: { ticket: { some: { userId: { equals: userId } } } },
+    select: {
+      id: true,
+      roomNumber: true,
+      roomType: {
+        select: { name: true, id: true, capacity: true },
+      },
+      hotel: { select: { id: true, name: true, imageUrl: true } },
+      _count: { select: { ticket: true } },
+    },
+  });
+}
+
 const hotelsRepository = {
   findAll,
+  findById,
   findAvailableRooms,
   findRoomInfo,
+  findBookedRoomByUserId,
 };
 
 export default hotelsRepository;
