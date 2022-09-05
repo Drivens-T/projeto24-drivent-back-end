@@ -6,3 +6,4 @@ export * from './tickets-controller';
 export * from './accommodation-controller';
 export * from './locations-controller';
 export * from './activities-controller';
+export * from './hotels-controller';

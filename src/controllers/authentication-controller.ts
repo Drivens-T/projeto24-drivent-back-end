@@ -13,12 +13,10 @@ export async function singInPost(req: Request, res: Response) {
 export async function authenticationGithub(req: Request, res: Response) {
   try {
     const token = await authenticationService.exchangeCodeForAccessToken(req.body.code);
-    console.log('token', token);
 
     const user = await authenticationService.fetchUser(token);
     res.send(user);
   } catch (err) {
-    console.log('err', err.response);
     res.sendStatus(500);
   }
 }

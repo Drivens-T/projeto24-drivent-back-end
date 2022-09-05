@@ -1,9 +1,9 @@
-import 'reflect-metadata';
-import 'express-async-errors';
-import express, { Express } from 'express';
 import cors from 'cors';
+import express, { Express } from 'express';
+import 'express-async-errors';
+import 'reflect-metadata';
 
-import { loadEnv, connectDb, disconnectDB } from '@/config';
+import { connectDb, disconnectDB, loadEnv } from '@/config';
 
 loadEnv();
 
@@ -15,9 +15,10 @@ import {
   enrollmentsRouter,
   locationsRouter,
   activitiesRouter,
+  hotelsRouter,
+  accommodationsRouter,
+  ticketsRouter,
 } from '@/routers';
-import { ticketsRouter } from './routers/tickets-router';
-import { accommodationsRouter } from './routers/accommodations-router';
 
 const app = express();
 app
@@ -32,6 +33,7 @@ app
   .use('/ticket', ticketsRouter)
   .use('/locations', locationsRouter)
   .use('/activities', activitiesRouter)
+  .use('/hotels', hotelsRouter)
   .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {

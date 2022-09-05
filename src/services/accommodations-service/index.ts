@@ -6,7 +6,7 @@ async function getAllAccommodations() {
   return accommodations;
 }
 
-const accommodationsService = {
+export const accommodationsService = {
   getAllAccommodations,
 };
 

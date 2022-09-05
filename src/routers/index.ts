@@ -4,3 +4,6 @@ export * from './events-router';
 export * from './enrollments-router';
 export * from './locations-router';
 export * from './activities-router';
+export * from './tickets-router';
+export * from './hotels-router';
+export * from './accommodations-router';
