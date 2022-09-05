@@ -31,12 +31,10 @@ services:
     command: postgres -p ${POSTGRES_PORT}
   redis:
     image: redis
-    environment:
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_URL: ${REDIS_URL}
+    restart: always
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
+    command: redis-server
   drivent-nginx:
     image: nginx
     ports:
