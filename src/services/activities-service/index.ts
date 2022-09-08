@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { conflictError, fullCapacityError, invalidDataError } from '@/errors';
+import { conflictError, fullCapacityError, notFoundError } from '@/errors';
 import activityRepository from '@/repositories/activity-repository/index';
 import { formatDate, formatDateTimestamp } from '@/utils/formats-utils';
 import { exclude } from '@/utils/prisma-utils';
@@ -21,7 +21,7 @@ async function getActivities(userId: number) {
 async function registerOnActivity(userId: number, activityId: number) {
   const activityData = await activityRepository.getActivity(activityId);
   if (!activityData) {
-    throw invalidDataError(['This activity does not exist']);
+    throw notFoundError();
   }
   const capacity = activityData.capacity - activityData._count.ticket;
   if (capacity <= 0) {
