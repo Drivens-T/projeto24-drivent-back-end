@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { authenticateToken, verifyUser } from '@/middlewares/authentication-middleware';
 import { validateBody } from '@/middlewares/validation-middleware';
 import { getActivities, registerOnActivity } from '@/controllers';
-import { registerActivitySchema } from '@/schemas/activities-schema';
+import { registerActivitySchema } from '@/schemas';
 
 const activitiesRouter = Router();
 
