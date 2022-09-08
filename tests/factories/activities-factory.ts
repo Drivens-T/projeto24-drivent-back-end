@@ -18,3 +18,17 @@ export async function createActivity(location?: Location) {
     },
   });
 }
+
+export async function createFullActivity(location?: Location) {
+  const incomingLocation = location || (await createLocation());
+
+  return prisma.activity.create({
+    data: {
+      name: faker.name.findName(),
+      locationId: incomingLocation.id,
+      startTime: dayjs('2022-10-22 09:00').toDate(),
+      endTime: dayjs('2022-10-22 10:00').toDate(),
+      capacity: 0,
+    },
+  });
+}

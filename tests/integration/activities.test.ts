@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import app, { close, init } from '@/app';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
@@ -8,9 +6,8 @@ import faker from '@faker-js/faker';
 import * as jwt from 'jsonwebtoken';
 import * as formats from '../../src/utils/formats-utils';
 import { createUser } from '../factories';
-import { createActivity } from '../factories/activities-factory';
+import { createActivity, createFullActivity } from '../factories/activities-factory';
 import { createLocation } from '../factories/locations-factory';
-import { prisma } from '@/config';
 import { createTicket } from '../factories/tickets-factory';
 
 beforeAll(async () => {
@@ -143,6 +140,44 @@ describe('POST /activities/register', () => {
 
       response = await server.get('/activities').set('Authorization', `Bearer ${token}`);
       expect(response.body.activities[0].isRegister).toBe(true);
+    });
+
+    it('should respond with status 404 when activityId is not found', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      await createTicket(user);
+      const activityData = await createActivity();
+      const { id } = activityData;
+      const body = generateValidBody(id + 1000);
+
+      const response = await server.post('/activities/register').set('Authorization', `Bearer ${token}`).send(body);
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+
+    it('should respond with status 400 when activity is full', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      await createTicket(user);
+      const activityData = await createFullActivity();
+      const { id } = activityData;
+      const body = generateValidBody(id);
+
+      const response = await server.post('/activities/register').set('Authorization', `Bearer ${token}`).send(body);
+      expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    });
+
+    it('should respond with status 409 when has time conflict', async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      await createTicket(user);
+      const activityData1 = await createActivity();
+      const activityData2 = await createActivity();
+      const body1 = generateValidBody(activityData1.id);
+      const body2 = generateValidBody(activityData2.id);
+
+      let response = await server.post('/activities/register').set('Authorization', `Bearer ${token}`).send(body1);
+      response = await server.post('/activities/register').set('Authorization', `Bearer ${token}`).send(body2);
+      expect(response.status).toBe(httpStatus.CONFLICT);
     });
   });
 });
