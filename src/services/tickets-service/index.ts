@@ -1,5 +1,6 @@
 import { conflictError, invalidDataError, notFoundError } from '@/errors';
 import { BookRoomRequest, BookTicket } from '@/interfaces/createDataInterfaces';
+import accommodationRepository from '@/repositories/accommodation-repository/index';
 import eventRepository from '@/repositories/event-repository/index';
 import hotelsRepository from '@/repositories/hotel-repository/index';
 import ticketRepository from '@/repositories/ticket-repository/index';
@@ -35,6 +36,11 @@ async function bookOrUpdateTicket(userId: number, eventId: number, data: BookTic
 async function bookHotelRoom(userId: number, eventId: number, data: BookRoomRequest) {
   const existingTicket = await ticketRepository.findTicketByUserId(userId);
   const { roomId } = data;
+
+  const modality = await eventRepository.findEventModalityById(existingTicket.modalityId);
+  if (modality.name === 'Online') throw invalidDataError(["You can't book a room to online modality"]);
+  const accommodation = await accommodationRepository.findById(existingTicket.accommodationId);
+  if (accommodation.name === 'Sem hotel') throw invalidDataError(["You can't book a room"]);
 
   const room = await hotelsRepository.findRoomInfo(roomId);
 
