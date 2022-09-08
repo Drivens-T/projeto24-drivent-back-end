@@ -60,13 +60,14 @@ describe('POST /users', () => {
       });
 
       it('should respond with status 409 when there is an user with given email', async () => {
+        const error = duplicatedEmailError();
         const body = generateValidBody();
         await createUser(body);
 
         const response = await server.post('/users').send(body);
 
         expect(response.status).toBe(httpStatus.CONFLICT);
-        expect(response.body).toEqual(duplicatedEmailError());
+        expect(response.body).toEqual({ message: error.message });
       });
 
       it('should respond with status 201 and create user when given email is unique', async () => {
