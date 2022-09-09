@@ -17,7 +17,7 @@ export async function authenticationGithub(req: Request, res: Response) {
     const user = await authenticationService.fetchUser(token);
     res.send(user);
   } catch (err) {
-    res.sendStatus(500);
+    res.status(500).send(err);
   }
 }
 
