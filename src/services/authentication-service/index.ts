@@ -82,9 +82,7 @@ async function fetchUser(token: any) {
 async function loginGithub(email: string, password: string) {
   const userWithSameEmail = await userRepository.findByEmail(email);
   if (!userWithSameEmail) {
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    await userService.createUser({ email, password: hashedPassword });
+    await userService.createUser({ email, password });
   }
 
   const result = await signIn({ email, password });
