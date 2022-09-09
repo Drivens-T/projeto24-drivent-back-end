@@ -21,6 +21,8 @@ services:
       REDIRECT_URL: ${REDIRECT_URL}
       CLIENT_ID: ${CLIENT_ID}
       CLIENT_SECRET: ${CLIENT_SECRET}
+      REACT_APP_CLIENT_ID: ${REACT_APP_CLIENT_ID}
+      REACT_APP_REDIRECT_URL: ${REACT_APP_REDIRECT_URL}
   drivent-postgres-production:
     image: postgres:13-alpine
     environment:
