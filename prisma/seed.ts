@@ -1,4 +1,16 @@
-import { Hotel, PrismaClient, Accommodation, Address, Enrollment, Modality, User, Location, Activity, Room, RoomType } from '@prisma/client';
+import {
+  Hotel,
+  PrismaClient,
+  Accommodation,
+  Address,
+  Enrollment,
+  Modality,
+  User,
+  Location,
+  Activity,
+  Room,
+  RoomType,
+} from '@prisma/client';
 import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
 import { createClient } from 'redis';
@@ -198,4 +210,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await redis.disconnect();
   });
